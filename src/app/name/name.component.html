@@ -1,0 +1,30 @@
+<br>
+<br>
+<br>
+<div class="text-center container font" style="margin-top: 20px;">
+    <span class="title1" style="font-weight: bold;">WEE</span>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <mat-card>
+        <span class="title4">Enter your name</span>
+        <br>
+        <mat-form-field style="width: 50%; text-align: center;" color="warning">
+            <input matInput [(ngModel)]="name" style="padding: 20px; font-size: 20pt; color: grey" />
+        </mat-form-field>
+        <div *ngIf="err.length > 0">
+            <span>{{err}}</span>
+            <br>
+        </div>
+
+        <br>
+
+        <button mat-flat-button color="primary" (click)="startGame()">Start</button>
+        <br>
+        <br>
+        <span (click)="openDialog()" style="cursor: pointer;">How to play?</span>
+    </mat-card>
+</div>

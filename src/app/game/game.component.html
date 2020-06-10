@@ -1,0 +1,104 @@
+<div>
+    <mat-drawer-container class="example-container">
+        <mat-drawer #drawer1 class="example-sidenav1" mode="side" opened="true">
+            <h1>Hi, {{name}}</h1>
+            <label>Highest: </label> <span> {{highestScore}}</span>
+            <div class="settings">
+                <mat-form-field style=" width: 100%;">
+                    <div>
+                        <label>Settings</label>
+                        <mat-select style="margin-top: 10px;" [(value)]="selectedSetting" [disabled]="this.players[0].ready">
+                            <mat-option *ngFor="let setting of settings" [value]="setting">
+                                {{setting}}
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                </mat-form-field>
+                <div style="padding-top: 20px;">
+                    <label>Time (seconds)</label>
+                    <mat-form-field style=" width: 100%;">
+                        <input matInput [(ngModel)]="setTime" style="margin-top: 10px;" type="number" [disabled]="this.players[0].ready">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <label style="padding-top: 20px;">Players</label>
+            <div class="players">
+                <mat-list>
+                    <mat-list-item *ngFor="let player of players" color="primary">
+                        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                            <span>{{player.name}}</span>
+                            <mat-icon *ngIf="player.ready" style="color:green">check</mat-icon>
+                        </div>
+                        <mat-divider></mat-divider>
+                    </mat-list-item>
+                </mat-list>
+                <br>
+            </div>
+            <button mat-flat-button [color]="readyButton === 'Ready' ? 'primary' : 'accent'" (click)="readyButton === 'Ready' ? readyPlayer() : unReadyPlayer()" style="width: 100%;">{{readyButton}}</button>
+            <div style="position: absolute; bottom: 2%; width: 100%; padding-right: 16px; margin-left: -20px; padding-left: 16px;">
+                <button mat-flat-button color="warn" (click)="quitGame()" style="width: 100%;">Quit</button>
+                <div class="text-center" style="margin-top: 10px;">
+                    Wee Copyright
+                </div>
+            </div>
+
+        </mat-drawer>
+        <div class="example-sidenav-content text-center">
+            <div class="timer" *ngIf="startGame">
+                <mat-card style="width: 40%; padding: 40px; display: flex; justify-content: space-around; align-content: center;">
+                    <div style="display: inline-block;">
+                        <span>{{timeLeft}}</span>
+                        <p>{{'sec'}}</p>
+                    </div>
+                    <div style="display: inline-block;">
+                        <span>{{score}}</span>
+                        <p>{{'pts'}}</p>
+                    </div>
+                </mat-card>
+            </div>
+
+            <div class="word" *ngIf="startGame">
+                {{word}}
+                <div *ngIf="!didGuessWord">
+                    <input class="guess-word" *ngFor="let w of wordArray; let idx=index;" [value]="w.show ? w.letter : ''" disabled>
+                </div>
+                <div *ngIf="didGuessWord">
+                    <input class="guess-word" *ngFor="let w of wordArray; let idx=index;" [value]="w.letter" disabled>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; margin-bottom: 20px; display: flex; justify-content: center; width: 100%; align-items: center;" *ngIf="startGame && !didGuessWord">
+                <mat-progress-bar mode="determinate" [value]="simPercent" style="width: 50%;"></mat-progress-bar>
+                <span style="padding-left: 10px;;">{{simPercent}}</span>
+            </div>
+
+            <input class="input-content" [(ngModel)]="inputWord" (keydown.enter)="gotInput()" *ngIf="startGame && !didGuessWord" placeholder="Type a word here..." #wordInput>
+
+        </div>
+
+        <mat-drawer #drawer2 class="example-sidenav2" mode="side" opened="false" position="end">
+            <div style="margin-bottom: 40px;">
+                <h1>Hints</h1>
+                <button mat-flat-button color='accent' (click)="getHint()">Reveal Letter ({{hints}})</button>
+            </div>
+            <div>
+                <h1>Previous Words</h1>
+
+                <mat-list style="max-height: 500px; overflow: auto; ">
+                    <mat-list-item *ngFor="let word of inputWords" color="primary">
+                        <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
+                            <label>{{word}}</label>
+                        </div>
+                        <mat-divider></mat-divider>
+                    </mat-list-item>
+                </mat-list>
+
+            </div>
+        </mat-drawer>
+
+
+
+    </mat-drawer-container>
+
+</div>
