@@ -11,12 +11,15 @@
 
 .example-sidenav1 {
     padding: 20px;
-    width: 300px;
+    /* width: 300px; */
+    width: 30%;
+    max-width: 350px;
 }
 
 .example-sidenav2 {
     padding: 20px;
-    width: 400px;
+    width: 30%;
+    max-width: 400px;
     text-align: center;
 }
 
@@ -50,10 +53,11 @@
 
 .guess-word {
     font-size: 20pt;
-    margin: 0 10px;
+    margin: 0 10px 10px;
     display: inline-block;
     width: 5rem;
     text-align: center;
+    line-height: 10px;
     /* border-bottom: 2px solid gray;
     margin: 0 15px; */
 }

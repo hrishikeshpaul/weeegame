@@ -22,6 +22,11 @@ export class NameComponent implements OnInit {
   }
 
   ngOnInit() {
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+      console.log('mobile')
+     } else {
+       console.log('web')
+     }
     setTimeout(()=>{
       this.ip.nativeElement.focus();
     },10);

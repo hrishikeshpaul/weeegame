@@ -24,6 +24,7 @@ import { GameComponent } from './game/game.component';
 import { DialogComponent } from './dialog/dialog.component';
 
 import { MatDialogModule } from "@angular/material/dialog";
+import { GamemobileComponent } from './gamemobile/gamemobile.component';
 
 let MatModules = [
   MatCardModule,
@@ -46,6 +47,7 @@ let MatModules = [
     NameComponent,
     GameComponent,
     DialogComponent,
+    GamemobileComponent,
 
   ],
   imports: [
