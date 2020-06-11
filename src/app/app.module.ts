@@ -6,36 +6,38 @@ import { AppComponent } from './app.component';
 import { NameComponent } from './name/name.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from  '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { MatCardModule } from '@angular/material/card'
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { MatSelectModule } from "@angular/material/select";
-import { MatButtonModule} from "@angular/material/button";
+import { MatButtonModule } from "@angular/material/button";
 import { MatSidenavModule } from "@angular/material/sidenav"
 import { MatListModule } from "@angular/material/list"
-import {MatIconModule} from "@angular/material/icon"
-import { MatProgressBarModule} from "@angular/material/progress-bar"
+import { MatIconModule } from "@angular/material/icon"
+import { MatProgressBarModule } from "@angular/material/progress-bar"
+import { MatSnackBarModule } from '@angular/material/snack-bar'
 
 import { GameComponent } from './game/game.component';
 import { DialogComponent } from './dialog/dialog.component';
 
-import {MatDialogModule} from "@angular/material/dialog";
+import { MatDialogModule } from "@angular/material/dialog";
 
 let MatModules = [
   MatCardModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatGridListModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatSidenavModule,
-    MatSelectModule,
-    MatListModule,
-    MatIconModule,
-    MatProgressBarModule
+  MatInputModule,
+  MatFormFieldModule,
+  MatGridListModule,
+  MatButtonModule,
+  MatDialogModule,
+  MatSidenavModule,
+  MatSelectModule,
+  MatListModule,
+  MatIconModule,
+  MatProgressBarModule,
+  MatSnackBarModule
 ]
 
 @NgModule({
@@ -44,7 +46,7 @@ let MatModules = [
     NameComponent,
     GameComponent,
     DialogComponent,
-    
+
   ],
   imports: [
     BrowserModule,

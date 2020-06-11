@@ -9,11 +9,11 @@
     <br>
     <br>
     <br>
-    <mat-card>
+    <div class="jumbotron">
         <span class="title4">Enter your name</span>
         <br>
         <mat-form-field style="width: 50%; text-align: center;" color="warning">
-            <input matInput [(ngModel)]="name" style="padding: 20px; font-size: 20pt; color: grey" />
+            <input matInput [(ngModel)]="name" style="padding: 20px; font-size: 20pt; color: rgb(63, 63, 63)" (keydown.enter)="startGame()" #nameInput>
         </mat-form-field>
         <div *ngIf="err.length > 0">
             <span>{{err}}</span>
@@ -26,5 +26,5 @@
         <br>
         <br>
         <span (click)="openDialog()" style="cursor: pointer;">How to play?</span>
-    </mat-card>
+    </div>
 </div>

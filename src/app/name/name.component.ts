@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {Router} from '@angular/router';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 
@@ -11,13 +11,20 @@ import {DialogComponent} from '../dialog/dialog.component'
   styleUrls: ['./name.component.css'],
   
 })
-export class NameComponent {
+export class NameComponent implements OnInit {
 
   name = '';
   err = '';
+  @ViewChild('nameInput') ip: ElementRef;
 
   constructor(private route: Router, public dialog: MatDialog) {
       localStorage.setItem('highestScore', '0')
+  }
+
+  ngOnInit() {
+    setTimeout(()=>{
+      this.ip.nativeElement.focus();
+    },10);
   }
 
   public startGame() {
@@ -32,10 +39,8 @@ export class NameComponent {
 
   openDialog(): void {
     const dialogConfig = new MatDialogConfig();
-
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-
         this.dialog.open(DialogComponent, dialogConfig);
   }
 

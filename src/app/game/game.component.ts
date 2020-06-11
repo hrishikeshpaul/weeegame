@@ -13,7 +13,6 @@ export class GameComponent implements OnInit {
   @ViewChild('drawer2') drawer2;
   @ViewChild('wordInput') wordInput;
 
-
   name = localStorage.getItem('name');
   readyButton = 'Ready'
   settings = [
@@ -40,6 +39,7 @@ export class GameComponent implements OnInit {
   allWords = [];
   prevSim = 0;
   canGuess = 2;
+  gotWord = 0;
 
   didGuessWord = false;
   score = 0;
@@ -51,6 +51,9 @@ export class GameComponent implements OnInit {
   ngOnInit(): void {
 
   }
+
+  @ViewChild('wordInput', { static: false }) inputEl: ElementRef;
+
 
   readyPlayer() {
     this.drawer2.opened = true
@@ -66,6 +69,9 @@ export class GameComponent implements OnInit {
     this.gameMechanism();
 
     if (this.startGame) {
+      setTimeout(()=>{
+        this.inputEl.nativeElement.focus();
+      },10);
       this.startTimer();
     }
   }
@@ -89,7 +95,6 @@ export class GameComponent implements OnInit {
         if (this.timeLeft > 0) {
           this.timeLeft--;
         } else {
-
           this.gameFinished();
         }
       }, 1000)
@@ -121,26 +126,27 @@ export class GameComponent implements OnInit {
 
   skipWord() {
     this.simPercent = 0.0;
-        this.wordArray.forEach(i => {
-          i.show = true
-        })
-        setTimeout(() => {
-          this.getNewWord();
-        }, 650)
-    let num = Math.floor(Math.random() * this.allWords.length)
-    this.word = this.allWords[num].trim();
-    this.wordArray = this.word.split('');
-    let ta = []
+    this.gotWord = 2;
     this.wordArray.forEach(i => {
-      ta.push({
-        letter: i,
-        show: false
-      })
+      i.show = true
     })
+    setTimeout(() => {
+      let num = Math.floor(Math.random() * this.allWords.length)
+      this.word = this.allWords[num].trim();
+      this.wordArray = this.word.split('');
+      let ta = []
+      this.wordArray.forEach(i => {
+        ta.push({
+          letter: i,
+          show: false
+        })
+      })
+      this.gotWord = 0;
+      this.wordArray = ta;
+      this.hints = Math.floor(this.word.length / 2)
+      this.canGuess = Math.floor(this.hints / 2)
+    }, 1200)
 
-    this.wordArray = ta;
-    this.hints = Math.floor(this.word.length / 2)
-    this.canGuess = Math.floor(this.hints/2)
   }
 
   getHint() {
@@ -149,7 +155,7 @@ export class GameComponent implements OnInit {
       if (this.wordArray[num].show) {
         this.getHint();
       }
-      
+
       this.hints -= 1;
       this.wordArray[num].show = true;
     }
@@ -169,8 +175,9 @@ export class GameComponent implements OnInit {
 
   gotInput() {
     if (this.inputWord) {
-      if (this.inputWord === this.word) {
+      if (this.inputWord.trim() === this.word.trim()) {
         this.score++;
+        this.gotWord = 1;
         this.inputWord = ''
         this.inputWords = []
         this.simPercent = 0.0;
@@ -179,7 +186,7 @@ export class GameComponent implements OnInit {
         })
         setTimeout(() => {
           this.getNewWord();
-        }, 650)
+        }, 1000)
       } else {
         this.simPercent = Math.round(similarity(this.inputWord, this.word) * 100);
         if (this.simPercent > this.prevSim) {
@@ -194,6 +201,7 @@ export class GameComponent implements OnInit {
   }
 
   getNewWord() {
+    this.gotWord = 0;
     let num = Math.floor(Math.random() * this.allWords.length)
     this.word = this.allWords[num].trim();
     this.wordArray = this.word.split('');
@@ -207,7 +215,7 @@ export class GameComponent implements OnInit {
 
     this.wordArray = ta;
     this.hints = Math.floor(this.word.length / 2)
-    this.canGuess = Math.floor(this.hints/2)
+    this.canGuess = Math.floor(this.hints / 2)
   }
 
   gameFinished() {
