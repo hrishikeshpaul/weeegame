@@ -7,7 +7,7 @@
                 <mat-form-field style=" width: 100%;">
                     <div>
                         <label>Settings</label>
-                        <mat-select style="margin-top: 10px;" [(value)]="selectedSetting" [disabled]="this.players[0].ready">
+                        <mat-select style="margin-top: 10px;" [(value)]="selectedSetting" [disabled]="players[0].ready">
                             <mat-option *ngFor="let setting of settings" [value]="setting">
                                 {{setting}}
                             </mat-option>
@@ -17,7 +17,7 @@
                 <div style="padding-top: 20px;">
                     <label>Time (seconds)</label>
                     <mat-form-field style=" width: 100%;">
-                        <input matInput [(ngModel)]="setTime" style="margin-top: 10px;" type="number" [disabled]="this.players[0].ready">
+                        <input matInput [(ngModel)]="setTime" style="margin-top: 10px;" type="number" [disabled]="players[0].ready">
                     </mat-form-field>
                 </div>
             </div>
@@ -45,6 +45,12 @@
 
         </mat-drawer>
         <div class="example-sidenav-content text-center">
+            <div class="container" style="display: flex; width: 100%; align-items: center; height: 100%; justify-content: center;" *ngIf="!players[0].ready && !startGame">
+                <div class="jumbotron">
+                    <label>How to play?</label>
+                    <p>Just type words, and keep an eye out for the tracker which will guide you to the correct word!</p>
+                </div>
+            </div>
             <div class="timer" *ngIf="startGame">
                 <mat-card style="width: 40%; padding: 40px; display: flex; justify-content: space-around; align-content: center;">
                     <div style="display: inline-block;">
@@ -59,7 +65,6 @@
             </div>
 
             <div class="word" *ngIf="startGame">
-                {{word}}
                 <div *ngIf="!didGuessWord">
                     <input class="guess-word" *ngFor="let w of wordArray; let idx=index;" [value]="w.show ? w.letter : ''" disabled>
                 </div>
@@ -70,17 +75,20 @@
 
             <div style="margin-top: 20px; margin-bottom: 20px; display: flex; justify-content: center; width: 100%; align-items: center;" *ngIf="startGame && !didGuessWord">
                 <mat-progress-bar mode="determinate" [value]="simPercent" style="width: 50%;"></mat-progress-bar>
-                <span style="padding-left: 10px;;">{{simPercent}}</span>
+                <span style="padding-left: 10px;;">{{simPercent}} %</span>
             </div>
 
-            <input class="input-content" [(ngModel)]="inputWord" (keydown.enter)="gotInput()" *ngIf="startGame && !didGuessWord" placeholder="Type a word here..." #wordInput>
+            <input class="input-content" [(ngModel)]="inputWord" (keydown.enter)="gotInput()" *ngIf="startGame && !didGuessWord" placeholder="Type a word here..." #wordInput id="wordInput">
 
         </div>
 
         <mat-drawer #drawer2 class="example-sidenav2" mode="side" opened="false" position="end">
-            <div style="margin-bottom: 40px;">
+            <div style="margin-bottom: 40px;" *ngIf="players[0].ready">
                 <h1>Hints</h1>
-                <button mat-flat-button color='accent' (click)="getHint()">Reveal Letter ({{hints}})</button>
+                <button mat-flat-button color='accent' (click)="getHint()" [disabled]="hints <= 0">Reveal Letter ({{hints <= 0 ? 0 : hints}})</button>
+                <br>
+                <br>
+                <button mat-flat-button style="background-color: #03DAC6;" (click)="skipWord()">Skip Word</button>
             </div>
             <div>
                 <h1>Previous Words</h1>
@@ -88,7 +96,7 @@
                 <mat-list style="max-height: 500px; overflow: auto; ">
                     <mat-list-item *ngFor="let word of inputWords" color="primary">
                         <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
-                            <label>{{word}}</label>
+                            <span [innerHTML]="word"></span>
                         </div>
                         <mat-divider></mat-divider>
                     </mat-list-item>

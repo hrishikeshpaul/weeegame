@@ -12,7 +12,7 @@ export class GameComponent implements OnInit {
 
   @ViewChild('drawer2') drawer2;
   @ViewChild('wordInput') wordInput;
-  
+
 
   name = localStorage.getItem('name');
   readyButton = 'Ready'
@@ -38,6 +38,8 @@ export class GameComponent implements OnInit {
   inputWord = ''
   simPercent;
   allWords = [];
+  prevSim = 0;
+  canGuess = 2;
 
   didGuessWord = false;
   score = 0;
@@ -63,10 +65,7 @@ export class GameComponent implements OnInit {
     this.didGuessWord = false;
     this.gameMechanism();
 
-
     if (this.startGame) {
-     
-      console.log(this.wordInput)
       this.startTimer();
     }
   }
@@ -90,7 +89,7 @@ export class GameComponent implements OnInit {
         if (this.timeLeft > 0) {
           this.timeLeft--;
         } else {
-          
+
           this.gameFinished();
         }
       }, 1000)
@@ -103,51 +102,31 @@ export class GameComponent implements OnInit {
 
   gameMechanism() {
     if (this.selectedSetting == 'Easy') {
-      console.log('here easy')
       this.http.get('../../assets/easy.txt', { responseType: 'text' }).subscribe(resultFile => {
         this.allWords = resultFile.split(',')
         this.getNewWord();
       })
     } else if (this.selectedSetting == 'Medium') {
-      console.log('here medium')
       this.http.get('../../assets/medium.txt', { responseType: 'text' }).subscribe(resultFile => {
+        this.allWords = resultFile.split(',')
+        this.getNewWord();
+      })
+    } else if (this.selectedSetting == 'Hard') {
+      this.http.get('../../assets/hard.txt', { responseType: 'text' }).subscribe(resultFile => {
         this.allWords = resultFile.split(',')
         this.getNewWord();
       })
     }
   }
 
-  getHint() {
-    if (this.hints > 0) {
-      this.hints -= 1;
-      let num = Math.floor(Math.random() * this.word.length)
-      this.wordArray[num].show = true;
-    }
-  }
-
-  gotInput() {
-    if (this.inputWord) {
-      if (this.inputWord === this.word) {
-        this.score ++;
-        this.inputWord = ''
-        this.inputWords = []
-        this.simPercent = 0.0;
+  skipWord() {
+    this.simPercent = 0.0;
         this.wordArray.forEach(i => {
           i.show = true
         })
         setTimeout(() => {
           this.getNewWord();
-        }, 500)
-      } else {
-        this.simPercent = Math.round(similarity(this.inputWord, this.word) * 100);
-        let temp = this.inputWord + ` (${this.simPercent}%) `
-        this.inputWords.unshift(temp)
-        this.inputWord = ''
-      }
-    }
-  }
-
-  getNewWord () {
+        }, 650)
     let num = Math.floor(Math.random() * this.allWords.length)
     this.word = this.allWords[num].trim();
     this.wordArray = this.word.split('');
@@ -160,7 +139,75 @@ export class GameComponent implements OnInit {
     })
 
     this.wordArray = ta;
-    this.hints = Math.floor(this.word.length/2)
+    this.hints = Math.floor(this.word.length / 2)
+    this.canGuess = Math.floor(this.hints/2)
+  }
+
+  getHint() {
+    if (this.hints > 0) {
+      let num = Math.floor(Math.random() * this.word.length)
+      if (this.wordArray[num].show) {
+        this.getHint();
+      }
+      
+      this.hints -= 1;
+      this.wordArray[num].show = true;
+    }
+  }
+
+  appearLetter() {
+    if (this.canGuess) {
+      let num = Math.floor(Math.random() * this.word.length)
+      if (this.wordArray[num].show) {
+        this.appearLetter();
+      }
+      this.wordArray[num].show = true;
+      this.canGuess--;
+    }
+
+  }
+
+  gotInput() {
+    if (this.inputWord) {
+      if (this.inputWord === this.word) {
+        this.score++;
+        this.inputWord = ''
+        this.inputWords = []
+        this.simPercent = 0.0;
+        this.wordArray.forEach(i => {
+          i.show = true
+        })
+        setTimeout(() => {
+          this.getNewWord();
+        }, 650)
+      } else {
+        this.simPercent = Math.round(similarity(this.inputWord, this.word) * 100);
+        if (this.simPercent > this.prevSim) {
+          this.appearLetter()
+          this.prevSim = this.simPercent
+        }
+        let temp = this.inputWord + ` (<label>${this.simPercent}%</label>) `
+        this.inputWords.unshift(temp)
+        this.inputWord = ''
+      }
+    }
+  }
+
+  getNewWord() {
+    let num = Math.floor(Math.random() * this.allWords.length)
+    this.word = this.allWords[num].trim();
+    this.wordArray = this.word.split('');
+    let ta = []
+    this.wordArray.forEach(i => {
+      ta.push({
+        letter: i,
+        show: false
+      })
+    })
+
+    this.wordArray = ta;
+    this.hints = Math.floor(this.word.length / 2)
+    this.canGuess = Math.floor(this.hints/2)
   }
 
   gameFinished() {
@@ -169,7 +216,7 @@ export class GameComponent implements OnInit {
     this.players[0].ready = false;
 
     localStorage.setItem('highestScore', this.score.toString())
-    
+
     if (this.highestScore < this.score) {
       this.highestScore = this.score
     }
