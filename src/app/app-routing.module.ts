@@ -16,7 +16,11 @@ const routes: Routes = [
   {
     path: 'mob-game',
     component: GamemobileComponent
-  }
+  },
+  {
+    path: '**',
+    redirectTo: '/'
+  },
 ];
 
 @NgModule({

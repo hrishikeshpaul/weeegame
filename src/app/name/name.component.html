@@ -12,7 +12,7 @@
     <div class="jumbotron">
         <span class="title4">Enter your name</span>
         <br>
-        <mat-form-field style="width: 50%; text-align: center;" color="warning">
+        <mat-form-field style="width: 50%; text-align: center;" color="warning" type="submit">
             <input matInput [(ngModel)]="name" style="padding: 20px; font-size: 20pt; color: rgb(63, 63, 63)" (keydown.enter)="startGame()" #nameInput>
         </mat-form-field>
         <div *ngIf="err.length > 0">
