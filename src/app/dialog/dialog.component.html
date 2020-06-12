@@ -1,9 +1,15 @@
 <h2 mat-dialog-title>
     How to play</h2>
-
-<b>Aim: </b> Guess the word
 <br>
-<b>How: </b> Just type random words. There will be an indicator that will show how close you are to the target word.
+<label>Aim</label>
+<p>Guess the word</p>
+<label>How to play?</label>
+<p>Just type words, and keep an eye out for the tracker which will guide you to the correct word!
+</p>
+<label>Controls</label>
+<p *ngIf="data.device === 'mb'"><code>shift</code>: Skip Word </p>
+<p *ngIf="data.device === 'mb'"><code>space</code>: Reveal Letter</p>
+<p *ngIf="data.device === 'mb'"><code>esc</code>: Unready</p>
 
 <mat-dialog-actions>
     <button mat-flat-button (click)="close()" color="error">Close</button>
